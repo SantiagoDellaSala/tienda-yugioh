@@ -6,6 +6,7 @@ import Home from './components/Home';
 import Store from './components/Store';
 import Cart from './components/Cart';
 import Register from './components/Register';
+import Login from "./components/Login"; // Importamos el componente Login
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/store" element={<Store />} /> {/* Tienda de cartas */}
           <Route path="/cart" element={<Cart />} /> {/* Carrito de compras */}
           <Route path="/register" element={<Register />} /> {/* Registro de usuario */}
+          <Route path="/login" element={<Login />} /> {/* Registro de usuario */}
         </Routes>
       </div>
     </Router>
@@ -35,6 +37,7 @@ const Navbar = () => {
         <li style={navItemStyle}><Link to="/store" style={linkStyle}>Tienda</Link></li>
         <li style={navItemStyle}><Link to="/cart" style={linkStyle}>Carrito</Link></li>
         <li style={navItemStyle}><Link to="/register" style={linkStyle}>Registrar</Link></li>
+        <li style={navItemStyle}><Link to="/login" style={linkStyle}>Iniciar Sesión</Link></li>
       </ul>
     </nav>
   );
