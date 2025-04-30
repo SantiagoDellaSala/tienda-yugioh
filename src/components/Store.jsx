@@ -22,7 +22,7 @@ const Store = () => {
       <div className="row">
         {cards.map(card => (
           <div key={card.id} className="col-md-3 mb-4">
-            <div className="card">
+            <div className="card h-100 shadow-lg border-light">
               <img
                 src={card.card_images[0].image_url} // Usando la URL de la imagen de la carta
                 alt={card.name}
@@ -31,8 +31,12 @@ const Store = () => {
               <div className="card-body">
                 <h5 className="card-title">{card.name}</h5>
                 <p className="card-text">{card.desc}</p>
-                <p className="card-text"><strong>Precio:</strong> {card.card_prices[0].price || 'N/A'}</p>
-                <button className="btn btn-primary">Añadir al carrito</button>
+                <p className="card-text">
+                  <strong>Precio:</strong> ${card.card_prices[0].price || 'N/A'}
+                </p>
+              </div>
+              <div className="card-footer text-center">
+                <button className="btn btn-primary w-100">Añadir al carrito</button>
               </div>
             </div>
           </div>
@@ -43,3 +47,4 @@ const Store = () => {
 };
 
 export default Store;
+
