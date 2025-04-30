@@ -1,8 +1,14 @@
+/* Asegura que el body ocupe toda la pantalla y no cause scroll */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* Evita el scroll */
+}
+
+/* Asegura que #root ocupe todo el espacio disponible */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  height: 100%;
 }
 
 .logo {
