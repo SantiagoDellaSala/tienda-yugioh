@@ -5,13 +5,21 @@ const Store = () => {
   const [cards, setCards] = useState([]);
 
   useEffect(() => {
-    // Usando la API pública de Yugioh para obtener las cartas
-    axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Blue-Eyes%20White%20Dragon') // Ejemplo con una carta específica
-      .then(response => {
-        const cardData = response.data.data;
-        if (cardData) {
-          setCards(cardData);
-        }
+    const cardNames = [
+      'Blue-Eyes White Dragon',
+      'Dark Magician',
+      'Red-Eyes Black Dragon',
+      'Exodia the Forbidden One'
+    ];
+
+    const requests = cardNames.map(name =>
+      axios.get(`https://db.ygoprodeck.com/api/v7/cardinfo.php?name=${encodeURIComponent(name)}`)
+    );
+
+    Promise.all(requests)
+      .then(responses => {
+        const allCards = responses.flatMap(res => res.data.data);
+        setCards(allCards);
       })
       .catch(error => console.error('Error fetching cards from Yugioh API:', error));
   }, []);
@@ -24,7 +32,7 @@ const Store = () => {
           <div key={card.id} className="col-md-3 mb-4">
             <div className="card h-100 shadow-lg border-light">
               <img
-                src={card.card_images[0].image_url} // Usando la URL de la imagen de la carta
+                src={card.card_images[0].image_url}
                 alt={card.name}
                 className="card-img-top"
               />
@@ -32,7 +40,7 @@ const Store = () => {
                 <h5 className="card-title">{card.name}</h5>
                 <p className="card-text">{card.desc}</p>
                 <p className="card-text">
-                  <strong>Precio:</strong> ${card.card_prices[0].price || 'N/A'}
+                  <strong>Precio:</strong> ${card.card_prices[0].cardmarket_price || 'N/A'}
                 </p>
               </div>
               <div className="card-footer text-center">
@@ -47,4 +55,3 @@ const Store = () => {
 };
 
 export default Store;
-
