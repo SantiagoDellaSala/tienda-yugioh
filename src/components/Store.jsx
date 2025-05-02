@@ -5,24 +5,16 @@ const Store = () => {
   const [cards, setCards] = useState([]);
 
   useEffect(() => {
-    const cardNames = [
-      'Blue-Eyes White Dragon',
-      'Dark Magician',
-      'Red-Eyes Black Dragon',
-      'Exodia the Forbidden One'
-    ];
-
-    const requests = cardNames.map(name =>
-      axios.get(`https://db.ygoprodeck.com/api/v7/cardinfo.php?name=${encodeURIComponent(name)}`)
-    );
-
-    Promise.all(requests)
-      .then(responses => {
-        const allCards = responses.flatMap(res => res.data.data);
-        setCards(allCards);
+    // Cambiamos la URL a la de nuestro servidor backend local
+    axios.get('http://localhost:5000/api/cards') // Asegúrate de que el puerto es el correcto
+      .then(response => {
+        // Aquí recibimos las cartas desde la API del backend
+        setCards(response.data); // 'response.data' contiene las cartas
       })
-      .catch(error => console.error('Error fetching cards from Yugioh API:', error));
-  }, []);
+      .catch(error => {
+        console.error('Error fetching cards from backend:', error);
+      });
+  }, []); // El array vacío asegura que solo se haga la solicitud una vez cuando el componente se monta
 
   return (
     <div className="container mt-5">
@@ -31,16 +23,17 @@ const Store = () => {
         {cards.map(card => (
           <div key={card.id} className="col-md-3 mb-4">
             <div className="card h-100 shadow-lg border-light">
+              {/* Si tienes imágenes almacenadas en tu base de datos, cámbialo aquí */}
               <img
-                src={card.card_images[0].image_url}
+                src={card.image || 'default-image.jpg'} // Usa una imagen por defecto si no hay imagen
                 alt={card.name}
                 className="card-img-top"
               />
               <div className="card-body">
                 <h5 className="card-title">{card.name}</h5>
-                <p className="card-text">{card.desc}</p>
+                <p className="card-text">{card.description}</p> {/* Descripción de la carta */}
                 <p className="card-text">
-                  <strong>Precio:</strong> ${card.card_prices[0].cardmarket_price || 'N/A'}
+                  <strong>Precio:</strong> ${card.price || 'N/A'}
                 </p>
               </div>
               <div className="card-footer text-center">
