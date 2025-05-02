@@ -20,49 +20,80 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Llamada a la API para crear un usuario
-    axios.post('http://localhost:3001/users', formData)
-      .then(response => {
-        console.log('Usuario registrado:', response.data);
+    // Llamada al backend para registrar el usuario
+    axios
+      .post('http://localhost:5000/api/register', formData)
+      .then((response) => {
+        alert('Usuario registrado exitosamente');
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error al registrar el usuario:', error);
       });
   };
 
   return (
-    <div>
-      <h1>Registrar Usuario</h1>
+    <div className="container mt-5">
+      <h2 className="text-center mb-4">Registrarse</h2>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="firstName"
-          placeholder="Nombre"
-          value={formData.firstName}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="lastName"
-          placeholder="Apellido"
-          value={formData.lastName}
-          onChange={handleChange}
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Contraseña"
-          value={formData.password}
-          onChange={handleChange}
-        />
-        <button type="submit">Registrarse</button>
+        <div className="mb-3">
+          <label htmlFor="firstName" className="form-label">
+            Nombre
+          </label>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            className="form-control"
+            value={formData.firstName}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="lastName" className="form-label">
+            Apellido
+          </label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            className="form-control"
+            value={formData.lastName}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label">
+            Correo electrónico
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            className="form-control"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="password" className="form-label">
+            Contraseña
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            className="form-control"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <button type="submit" className="btn btn-primary">
+          Registrarse
+        </button>
       </form>
     </div>
   );
