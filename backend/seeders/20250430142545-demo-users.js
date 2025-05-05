@@ -6,7 +6,7 @@ module.exports = {
         firstName: 'John',
         lastName: 'Doe',
         email: 'john.doe@example.com',
-        password: 'hashed_password_example', // Asegúrate de usar el hash correcto
+        password: 'hashed_password_example',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -15,7 +15,7 @@ module.exports = {
         firstName: 'Jane',
         lastName: 'Smith',
         email: 'jane.smith@example.com',
-        password: 'hashed_password_example', // Asegúrate de usar el hash correcto
+        password: 'hashed_password_example',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
