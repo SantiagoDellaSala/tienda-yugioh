@@ -1,19 +1,27 @@
-// Navbar.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
 
   const isActive = (path) => location.pathname === path;
 
   const user = JSON.parse(localStorage.getItem('user')); // Verificar si hay un usuario autenticado
 
   const handleLogout = () => {
-    // Eliminar la sesión
     localStorage.removeItem('user');
-    navigate('/login'); // Redirigir al login
+    navigate('/login');
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    navigate(`/store?search=${searchTerm.trim()}`);
   };
 
   return (
@@ -26,11 +34,8 @@ const Navbar = () => {
           <li style={{ ...navItemStyle, ...(isActive('/store') ? activeStyle : {}) }}>
             <Link to="/store" style={linkStyle}>Tienda</Link>
           </li>
-          <li style={{ ...navItemStyle, ...(isActive('/cart') ? activeStyle : {}) }}>
-            <Link to="/cart" style={linkStyle}>Carrito</Link>
-          </li>
 
-          {/* Mostrar opciones según si el usuario está logueado o no */}
+          {/* Opciones para usuarios no logueados */}
           {!user ? (
             <>
               <li style={{ ...navItemStyle, ...(isActive('/register') ? activeStyle : {}) }}>
@@ -42,25 +47,34 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <li style={{ ...navItemStyle }}>
-                <Link to="/profile" style={linkStyle}>Perfil</Link> {/* Perfil */}
+              {/* Opciones exclusivas para usuarios logueados */}
+              <li style={{ ...navItemStyle, ...(isActive('/cart') ? activeStyle : {}) }}>
+                <Link to="/cart" style={linkStyle}>Carrito</Link>
               </li>
-              <li style={{ ...navItemStyle, ...(isActive('/publish') ? activeStyle : {}) }}>
-                <Link to="/publish" style={linkStyle}>Publicar</Link> {/* Solo si el usuario está logueado */}
+              <li style={{ ...navItemStyle, ...(isActive('/profile') ? activeStyle : {}) }}>
+                <Link to="/profile" style={linkStyle}>Perfil</Link>
               </li>
 
+              <li style={{ ...navItemStyle, ...(isActive('/publish') ? activeStyle : {}) }}>
+                <Link to="/publish" style={linkStyle}>Publicar</Link>
+              </li>
               <li style={{ ...navItemStyle }}>
-                <button onClick={handleLogout} style={logoutButtonStyle}>Salir</button> {/* Salir */}
+                <button onClick={handleLogout} style={logoutButtonStyle}>Salir</button>
               </li>
             </>
           )}
         </ul>
+
         {/* Barra de búsqueda */}
-        <input
-          type="text"
-          placeholder="Buscar cartas..."
-          style={searchInputStyle}
-        />
+        <form onSubmit={handleSearchSubmit} style={searchFormStyle}>
+          <input
+            type="text"
+            placeholder="Buscar cartas..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            style={searchInputStyle}
+          />
+        </form>
       </div>
     </nav>
   );
@@ -96,12 +110,12 @@ const linkStyle = {
   color: '#fff',
   textDecoration: 'none',
   fontSize: '18px',
-  transition: 'all 0.3s ease-in-out' // Animación suave para el subrayado
+  transition: 'all 0.3s ease-in-out'
 };
 
 const activeStyle = {
-  textDecoration: 'underline', // Solo subraya el enlace activo
-  textDecorationColor: '#fff', // Subrayado en blanco
+  textDecoration: 'underline',
+  textDecorationColor: '#fff',
 };
 
 const searchInputStyle = {
@@ -110,6 +124,12 @@ const searchInputStyle = {
   border: 'none',
   fontSize: '16px',
   outline: 'none'
+};
+
+const searchFormStyle = {
+  margin: 0,
+  display: 'flex',
+  alignItems: 'center',
 };
 
 const logoutButtonStyle = {
