@@ -1,3 +1,4 @@
+// Store.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -5,16 +6,14 @@ const Store = () => {
   const [cards, setCards] = useState([]);
 
   useEffect(() => {
-    // Cambiamos la URL a la de nuestro servidor backend local
-    axios.get('http://localhost:5000/api/cards') // Asegúrate de que el puerto es el correcto
+    axios.get('http://localhost:5000/api/cards')
       .then(response => {
-        // Aquí recibimos las cartas desde la API del backend
-        setCards(response.data); // 'response.data' contiene las cartas
+        setCards(response.data);
       })
       .catch(error => {
         console.error('Error fetching cards from backend:', error);
       });
-  }, []); // El array vacío asegura que solo se haga la solicitud una vez cuando el componente se monta
+  }, []);
 
   return (
     <div className="container mt-5">
@@ -23,18 +22,18 @@ const Store = () => {
         {cards.map(card => (
           <div key={card.id} className="col-md-3 mb-4">
             <div className="card h-100 shadow-lg border-light">
-              {/* Si tienes imágenes almacenadas en tu base de datos, cámbialo aquí */}
               <img
-                src={card.image || 'default-image.jpg'} // Usa una imagen por defecto si no hay imagen
+                src={card.image || 'default-image.jpg'}
                 alt={card.name}
                 className="card-img-top"
               />
               <div className="card-body">
                 <h5 className="card-title">{card.name}</h5>
-                <p className="card-text">{card.description}</p> {/* Descripción de la carta */}
+                <p className="card-text">{card.description}</p>
                 <p className="card-text">
                   <strong>Precio:</strong> ${card.price || 'N/A'}
                 </p>
+                <p className="card-text">Vendedor: {card.user ? `${card.user.firstName} ${card.user.lastName}` : 'Desconocido'}</p>
               </div>
               <div className="card-footer text-center">
                 <button className="btn btn-primary w-100">Añadir al carrito</button>

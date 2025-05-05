@@ -5,16 +5,16 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Card extends Model {
     static associate(models) {
-      // Aquí podrías definir asociaciones si las necesitas
+      // Aquí definimos la relación con el modelo User
+      Card.belongsTo(models.User, { foreignKey: 'userId', as: 'user' }); // Asociamos una carta a un usuario
     }
   }
 
   Card.init({
-    // El ID se genera automáticamente por Sequelize
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true, // Auto-incrementable para obtener un ID único
+      autoIncrement: true,
     },
     name: {
       type: DataTypes.STRING,

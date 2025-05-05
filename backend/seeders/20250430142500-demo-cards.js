@@ -9,6 +9,7 @@ module.exports = {
         element: 'Light',
         description: 'A legendary dragon with immense power.',
         code: 'BEWD001',
+        userId: 1,
         createdAt: new Date(),
         updatedAt: new Date(),
       },

@@ -95,13 +95,13 @@ const navItemStyle = {
 const linkStyle = {
   color: '#fff',
   textDecoration: 'none',
-  fontSize: '18px'
+  fontSize: '18px',
+  transition: 'all 0.3s ease-in-out' // Animación suave para el subrayado
 };
 
 const activeStyle = {
-  backgroundColor: '#555',
-  boxShadow: '0 0 10px #facc15',
-  color: '#facc15'
+  textDecoration: 'underline', // Solo subraya el enlace activo
+  textDecorationColor: '#fff', // Subrayado en blanco
 };
 
 const searchInputStyle = {
