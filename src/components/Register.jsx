@@ -1,5 +1,7 @@
+// Register.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +11,7 @@ const Register = () => {
     password: ''
   });
 
+  // Manejar los cambios en el formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -17,6 +20,7 @@ const Register = () => {
     });
   };
 
+  // Enviar los datos de registro
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -24,10 +28,22 @@ const Register = () => {
     axios
       .post('http://localhost:5000/api/register', formData)
       .then((response) => {
-        alert('Usuario registrado exitosamente');
+        // Mostrar mensaje de éxito con SweetAlert
+        Swal.fire({
+          title: '¡Registro Exitoso!',
+          text: response.data.message, // Mensaje de la respuesta del backend
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
       })
       .catch((error) => {
-        console.error('Error al registrar el usuario:', error);
+        // Mostrar mensaje de error con SweetAlert
+        Swal.fire({
+          title: '¡Error!',
+          text: error.response?.data?.message || 'Hubo un problema al registrar el usuario',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
       });
   };
 

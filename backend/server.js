@@ -15,14 +15,14 @@ app.use(cors());
 app.use(express.json());
 
 // Servir archivos estáticos desde /uploads
-app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+app.use('/uploads', express.static(path.join(__dirname, './public', 'uploads')));
 
 // Ruta de prueba
 app.get('/', (req, res) => {
   res.send('¡Backend funcionando!');
 });
 
-// Ruta de registro
+// server.js (ruta de registro)
 app.post('/api/register', async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
 
@@ -34,12 +34,24 @@ app.post('/api/register', async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
-    await User.create({ email, password: hashedPassword, firstName, lastName });
-    res.status(201).json({ message: 'Usuario registrado exitosamente' });
+    const newUser = await User.create({ email, password: hashedPassword, firstName, lastName });
+
+    // Crear el token JWT para el nuevo usuario
+    const token = jwt.sign(
+      { userId: newUser.id, email: newUser.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.status(201).json({
+      message: 'Usuario registrado exitosamente',
+      token: token // Enviar el token al frontend
+    });
   } catch (error) {
     res.status(500).json({ message: 'Error al registrar al usuario' });
   }
 });
+
 
 // Ruta de login
 app.post('/api/login', async (req, res) => {

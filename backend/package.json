@@ -19,7 +19,8 @@
     "mysql2": "^3.14.1",
     "nodemon": "^3.1.10",
     "react-router-dom": "^7.5.3",
-    "sequelize": "^6.37.7"
+    "sequelize": "^6.37.7",
+    "sweetalert2": "^11.21.0"
   },
   "devDependencies": {
     "sequelize-cli": "^6.6.2"
