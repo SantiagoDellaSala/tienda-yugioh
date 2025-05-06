@@ -1,12 +1,12 @@
-// Publish.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Publish = () => {
   const [name, setName] = useState('');
   const [stars, setStars] = useState('');
   const [type, setType] = useState('');
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [element, setElement] = useState('');
   const [description, setDescription] = useState('');
   const [code, setCode] = useState('');
@@ -17,21 +17,42 @@ const Publish = () => {
     return <div>Cargando...</div>;
   }
 
+  useEffect(() => {
+    if (image) {
+      const objectUrl = URL.createObjectURL(image);
+      setImagePreview(objectUrl);
+      return () => URL.revokeObjectURL(objectUrl); // Limpia el objeto URL cuando el componente se desmonte
+    }
+  }, [image]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      setImage(file);
+    } else {
+      alert('Por favor, selecciona un archivo de imagen válido.');
+    }
+  };
+
   const handlePublish = async (e) => {
     e.preventDefault();
 
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:5000/api/cards', {
-        name,
-        stars,
-        type,
-        image,
-        element,
-        description,
-        code
-      }, {
-        headers: { Authorization: `Bearer ${token}` } // Enviar token en el header
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('stars', stars);
+      formData.append('type', type);
+      formData.append('image', image);
+      formData.append('element', element);
+      formData.append('description', description);
+      formData.append('code', code);
+
+      const response = await axios.post('http://localhost:5000/api/cards', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
       });
 
       alert('Carta publicada exitosamente!');
@@ -76,14 +97,19 @@ const Publish = () => {
           />
         </div>
         <div className="form-group">
-          <label>Imagen (URL):</label>
+          <label>Imagen:</label>
           <input
-            type="text"
+            type="file"
             className="form-control"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
+            accept="image/*"
+            onChange={handleImageChange}
             required
           />
+          {imagePreview && (
+            <div className="mt-3">
+              <img src={imagePreview} alt="Vista previa" className="img-fluid" />
+            </div>
+          )}
         </div>
         <div className="form-group">
           <label>Elemento:</label>

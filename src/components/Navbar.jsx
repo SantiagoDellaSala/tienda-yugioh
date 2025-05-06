@@ -8,7 +8,7 @@ const Navbar = () => {
 
   const isActive = (path) => location.pathname === path;
 
-  const user = JSON.parse(localStorage.getItem('user')); // Verificar si hay un usuario autenticado
+  const user = JSON.parse(localStorage.getItem('user'));
 
   const handleLogout = () => {
     localStorage.removeItem('user');

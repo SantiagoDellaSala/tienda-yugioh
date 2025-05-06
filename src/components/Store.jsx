@@ -57,10 +57,11 @@ const Store = () => {
             <div key={card.id} className="col-md-3 mb-4">
               <div className="card h-100 shadow-lg border-light">
                 <img
-                  src={card.image || 'default-image.jpg'}
+                  src={`http://localhost:5000${card.image}`}
                   alt={card.name}
                   className="card-img-top"
                 />
+
                 <div className="card-body">
                   <h5 className="card-title">{card.name}</h5>
                   <p className="card-text">{card.description}</p>
