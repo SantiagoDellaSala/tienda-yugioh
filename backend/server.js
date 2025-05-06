@@ -3,7 +3,7 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const path = require('path');
-const { User, Card } = require('./models');
+const { User, Card, Cart, CartItem } = require('./models'); // Asegúrate de incluir Cart y CartItem
 const authMiddleware = require('./middleware/authMiddleware');
 const upload = require('./middleware/upload');
 require('dotenv').config();
@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
   res.send('¡Backend funcionando!');
 });
 
-// server.js (ruta de registro)
+// Ruta de registro
 app.post('/api/register', async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
 
@@ -52,7 +52,6 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-
 // Ruta de login
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
@@ -76,7 +75,7 @@ app.post('/api/login', async (req, res) => {
   res.json({ token });
 });
 
-// Ruta API para obtener todas las cartas
+// Ruta para obtener todas las cartas
 app.get('/api/cards', async (req, res) => {
   try {
     const cards = await Card.findAll({
@@ -120,6 +119,115 @@ app.post('/api/cards', authMiddleware, upload.single('image'), async (req, res) 
   } catch (error) {
     console.error('Error al crear la carta:', error);
     res.status(500).json({ message: 'Error al crear la carta' });
+  }
+});
+
+// Ruta para obtener los productos del carrito
+app.get('/api/cart', authMiddleware, async (req, res) => {
+  try {
+    const cart = await Cart.findOne({
+      where: { userId: req.userId },
+      include: [{
+        model: Card,
+        as: 'products',
+        attributes: ['id', 'name', 'price', 'image'],
+        through: { attributes: ['quantity'] }
+      }]
+    });
+
+    if (!cart) {
+      return res.status(404).json({ message: 'Carrito vacío o no encontrado' });
+    }
+
+    res.json(cart.products); // Aquí te enviamos solo los productos
+  } catch (error) {
+    console.error('Error al obtener el carrito:', error);
+    res.status(500).json({ message: 'Error al obtener el carrito' });
+  }
+});
+
+// Ruta para agregar un producto al carrito
+app.post('/api/cart', authMiddleware, async (req, res) => {
+  const { productId, quantity } = req.body;
+
+  try {
+    let cart = await Cart.findOne({ where: { userId: req.userId } });
+
+    if (!cart) {
+      cart = await Cart.create({ userId: req.userId });
+    }
+
+    const existingProduct = await CartItem.findOne({
+      where: { cartId: cart.id, productId }
+    });
+
+    if (existingProduct) {
+      // Si el producto ya está en el carrito, actualizamos la cantidad
+      existingProduct.quantity += quantity;
+      await existingProduct.save();
+    } else {
+      // Si el producto no está en el carrito, lo agregamos
+      await CartItem.create({ cartId: cart.id, productId, quantity });
+    }
+
+    res.status(201).json({ message: 'Producto agregado al carrito' });
+  } catch (error) {
+    console.error('Error al agregar producto al carrito:', error);
+    res.status(500).json({ message: 'Error al agregar producto al carrito' });
+  }
+});
+
+// Ruta para eliminar un producto del carrito
+app.delete('/api/cart/:productId', authMiddleware, async (req, res) => {
+  const { productId } = req.params;
+
+  try {
+    const cart = await Cart.findOne({ where: { userId: req.userId } });
+
+    if (!cart) {
+      return res.status(404).json({ message: 'Carrito no encontrado' });
+    }
+
+    const cartItem = await CartItem.findOne({ where: { cartId: cart.id, productId } });
+
+    if (!cartItem) {
+      return res.status(404).json({ message: 'Producto no encontrado en el carrito' });
+    }
+
+    await cartItem.destroy();
+
+    res.status(200).json({ message: 'Producto eliminado del carrito' });
+  } catch (error) {
+    console.error('Error al eliminar producto del carrito:', error);
+    res.status(500).json({ message: 'Error al eliminar producto del carrito' });
+  }
+});
+
+// Ruta para actualizar la cantidad de un producto en el carrito
+app.put('/api/cart/:productId', authMiddleware, async (req, res) => {
+  const { productId } = req.params;
+  const { quantity } = req.body;
+
+  try {
+    const cart = await Cart.findOne({ where: { userId: req.userId } });
+
+    if (!cart) {
+      return res.status(404).json({ message: 'Carrito no encontrado' });
+    }
+
+    const cartItem = await CartItem.findOne({ where: { cartId: cart.id, productId } });
+
+    if (!cartItem) {
+      return res.status(404).json({ message: 'Producto no encontrado en el carrito' });
+    }
+
+    cartItem.quantity = quantity;
+    await cartItem.save();
+
+    res.status(200).json({ message: 'Cantidad actualizada en el carrito' });
+  } catch (error) {
+    console.error('Error al actualizar la cantidad:', error);
+    res.status(500).json({ message: 'Error al actualizar la cantidad' });
   }
 });
 

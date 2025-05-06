@@ -2,6 +2,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert('Cards', [
       {
+        id: 1,
         name: 'Blue-Eyes White Dragon',
         stars: 8,
         type: 'Dragon',
@@ -14,6 +15,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 2,
         name: 'Dark Magician',
         stars: 7,
         type: 'Spellcaster',
@@ -26,6 +28,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 3,
         name: 'Red-Eyes Black Dragon',
         stars: 7,
         type: 'Dragon',
@@ -38,6 +41,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 4,
         name: 'Summoned Skull',
         stars: 6,
         type: 'Fiend',
@@ -50,6 +54,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 5,
         name: 'Blue-Eyes Alternative White Dragon',
         stars: 8,
         type: 'Dragon',
@@ -62,6 +67,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 6,
         name: 'Magician of Black Chaos',
         stars: 8,
         type: 'Spellcaster',
@@ -74,6 +80,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 7,
         name: 'Dragon Knight',
         stars: 7,
         type: 'Dragon',
@@ -86,6 +93,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 8,
         name: 'Obelisk the Tormentor',
         stars: 10,
         type: 'Divine Beast',
@@ -98,6 +106,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 9,
         name: 'Slifer the Sky Dragon',
         stars: 10,
         type: 'Divine Beast',
@@ -110,6 +119,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 10,
         name: 'The Winged Dragon of Ra',
         stars: 10,
         type: 'Divine Beast',
@@ -122,6 +132,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 11,
         name: 'Cyber Dragon',
         stars: 6,
         type: 'Machine',
@@ -134,6 +145,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 12,
         name: 'Elemental Hero Neos',
         stars: 7,
         type: 'Warrior',
@@ -146,6 +158,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 13,
         name: 'Blue-Eyes Shining Dragon',
         stars: 12,
         type: 'Dragon',
@@ -158,6 +171,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 14,
         name: 'Chaos Emperor Dragon',
         stars: 8,
         type: 'Dragon',
@@ -170,6 +184,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 15,
         name: 'Gorz the Emissary of Darkness',
         stars: 8,
         type: 'Fiend',
@@ -182,6 +197,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 16,
         name: 'Duelist Dragon',
         stars: 7,
         type: 'Dragon',
@@ -194,6 +210,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 17,
         name: 'Dark Paladin',
         stars: 8,
         type: 'Spellcaster',
@@ -206,6 +223,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 18,
         name: 'Thunder Dragon',
         stars: 5,
         type: 'Dragon',
@@ -218,6 +236,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 19,
         name: 'Elemental Hero Flame Wingman',
         stars: 6,
         type: 'Warrior',
@@ -230,6 +249,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 20,
         name: 'Darklord Zerato',
         stars: 8,
         type: 'Fiend',
@@ -242,6 +262,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 21,
         name: 'Vampire Lord',
         stars: 6,
         type: 'Zombie',
@@ -254,6 +275,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 22,
         name: 'Jinzo',
         stars: 6,
         type: 'Machine',
@@ -266,6 +288,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
+        id: 23,
         name: 'Yubel',
         stars: 10,
         type: 'Fiend',
