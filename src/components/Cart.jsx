@@ -1,13 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import CartItem from './CartItem';  // Importamos el componente CartItem
-import CartEmptyMessage from './CartEmptyMessage';  // Importamos el componente CartEmptyMessage
-import CartTotal from './CartTotal';  // Importamos el componente CartTotal
+import CartItem from './CartItem';
+import CartEmptyMessage from './CartEmptyMessage';
+import CartTotal from './CartTotal';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
-    // Aquí va la lógica para obtener los productos en el carrito (puedes hacer peticiones al backend para obtener los productos del carrito)
+    const fetchCartItems = async () => {
+      try {
+        const token = localStorage.getItem('token'); // Asegúrate de tener el token guardado
+        const response = await fetch('http://localhost:5000/api/cart', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Error al obtener el carrito');
+        }
+
+        const data = await response.json();
+        setCartItems(data.products); // Aquí asignamos los productos del carrito
+      } catch (error) {
+        console.error('Error al obtener el carrito:', error);
+      }
+    };
+
+    fetchCartItems();
   }, []);
 
   return (

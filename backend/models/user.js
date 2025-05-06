@@ -35,5 +35,12 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'User',
   });
 
+  User.afterCreate(async (user, options) => {
+    const { Cart } = sequelize.models;
+  
+    await Cart.create({ userId: user.id });
+  });
+  
+
   return User;
 };

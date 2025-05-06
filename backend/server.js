@@ -131,7 +131,7 @@ app.get('/api/cart', authMiddleware, async (req, res) => {
         model: Card,
         as: 'products',
         attributes: ['id', 'name', 'price', 'image'],
-        through: { attributes: ['quantity'] }
+        through: { attributes: ['quantity'] } // Incluye cantidad desde CartItem
       }]
     });
 
@@ -139,12 +139,13 @@ app.get('/api/cart', authMiddleware, async (req, res) => {
       return res.status(404).json({ message: 'Carrito vacío o no encontrado' });
     }
 
-    res.json(cart.products); // Aquí te enviamos solo los productos
+    res.json(cart); // ✅ devolvemos el carrito completo, no solo los productos
   } catch (error) {
     console.error('Error al obtener el carrito:', error);
     res.status(500).json({ message: 'Error al obtener el carrito' });
   }
 });
+
 
 // Ruta para agregar un producto al carrito
 app.post('/api/cart', authMiddleware, async (req, res) => {
