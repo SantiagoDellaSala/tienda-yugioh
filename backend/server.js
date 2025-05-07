@@ -3,7 +3,7 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const path = require('path');
-const { User, Card, Cart, CartItem } = require('./models'); // Asegúrate de incluir Cart y CartItem
+const { User, Card, Cart, CartItem } = require('./models');
 const authMiddleware = require('./middleware/authMiddleware');
 const upload = require('./middleware/upload');
 require('dotenv').config();
@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
   res.send('¡Backend funcionando!');
 });
 
-// Ruta de registro
+// Registro de usuario
 app.post('/api/register', async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
 
@@ -36,7 +36,6 @@ app.post('/api/register', async (req, res) => {
   try {
     const newUser = await User.create({ email, password: hashedPassword, firstName, lastName });
 
-    // Crear el token JWT para el nuevo usuario
     const token = jwt.sign(
       { userId: newUser.id, email: newUser.email },
       process.env.JWT_SECRET,
@@ -45,14 +44,14 @@ app.post('/api/register', async (req, res) => {
 
     res.status(201).json({
       message: 'Usuario registrado exitosamente',
-      token: token // Enviar el token al frontend
+      token
     });
   } catch (error) {
     res.status(500).json({ message: 'Error al registrar al usuario' });
   }
 });
 
-// Ruta de login
+// Login
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -75,7 +74,7 @@ app.post('/api/login', async (req, res) => {
   res.json({ token });
 });
 
-// Ruta para obtener todas las cartas
+// Obtener cartas
 app.get('/api/cards', async (req, res) => {
   try {
     const cards = await Card.findAll({
@@ -92,13 +91,14 @@ app.get('/api/cards', async (req, res) => {
   }
 });
 
-// Ruta para publicar una carta con imagen
+// Publicar carta con imagen y precio
 app.post('/api/cards', authMiddleware, upload.single('image'), async (req, res) => {
   console.log('===> POST /api/cards ejecutado');
   console.log('Usuario:', req.userId);
   console.log('Body:', req.body);
   console.log('Archivo:', req.file);
-  const { name, stars, type, element, description, code } = req.body;
+  
+  const { name, stars, type, element, description, code, price } = req.body;
   const userId = req.userId;
 
   try {
@@ -112,6 +112,7 @@ app.post('/api/cards', authMiddleware, upload.single('image'), async (req, res) 
       element,
       description,
       code,
+      price,
       userId,
     });
 
@@ -122,7 +123,7 @@ app.post('/api/cards', authMiddleware, upload.single('image'), async (req, res) 
   }
 });
 
-// Ruta para obtener los productos del carrito
+// Obtener productos del carrito
 app.get('/api/cart', authMiddleware, async (req, res) => {
   try {
     const cart = await Cart.findOne({
@@ -131,7 +132,7 @@ app.get('/api/cart', authMiddleware, async (req, res) => {
         model: Card,
         as: 'products',
         attributes: ['id', 'name', 'price', 'image'],
-        through: { attributes: ['quantity'] } // Incluye cantidad desde CartItem
+        through: { attributes: ['quantity'] }
       }]
     });
 
@@ -139,15 +140,14 @@ app.get('/api/cart', authMiddleware, async (req, res) => {
       return res.status(404).json({ message: 'Carrito vacío o no encontrado' });
     }
 
-    res.json(cart); // ✅ devolvemos el carrito completo, no solo los productos
+    res.json(cart);
   } catch (error) {
     console.error('Error al obtener el carrito:', error);
     res.status(500).json({ message: 'Error al obtener el carrito' });
   }
 });
 
-
-// Ruta para agregar un producto al carrito
+// Agregar producto al carrito
 app.post('/api/cart', authMiddleware, async (req, res) => {
   const { productId, quantity } = req.body;
 
@@ -163,11 +163,9 @@ app.post('/api/cart', authMiddleware, async (req, res) => {
     });
 
     if (existingProduct) {
-      // Si el producto ya está en el carrito, actualizamos la cantidad
       existingProduct.quantity += quantity;
       await existingProduct.save();
     } else {
-      // Si el producto no está en el carrito, lo agregamos
       await CartItem.create({ cartId: cart.id, productId, quantity });
     }
 
@@ -178,7 +176,7 @@ app.post('/api/cart', authMiddleware, async (req, res) => {
   }
 });
 
-// Ruta para eliminar un producto del carrito
+// Eliminar producto del carrito
 app.delete('/api/cart/:productId', authMiddleware, async (req, res) => {
   const { productId } = req.params;
 
@@ -204,7 +202,7 @@ app.delete('/api/cart/:productId', authMiddleware, async (req, res) => {
   }
 });
 
-// Ruta para actualizar la cantidad de un producto en el carrito
+// Actualizar cantidad en el carrito
 app.put('/api/cart/:productId', authMiddleware, async (req, res) => {
   const { productId } = req.params;
   const { quantity } = req.body;

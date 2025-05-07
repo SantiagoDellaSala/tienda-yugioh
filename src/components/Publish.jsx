@@ -9,6 +9,7 @@ const Publish = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [element, setElement] = useState('');
   const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
   const [code, setCode] = useState('');
   const user = JSON.parse(localStorage.getItem('user'));
 
@@ -130,6 +131,17 @@ const Publish = () => {
             required
           />
         </div>
+        <div className="form-group">
+          <label>Precio:</label>
+          <input
+            type="number"
+            className="form-control"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            required
+          />
+        </div>
+
         <div className="form-group">
           <label>Código:</label>
           <input
